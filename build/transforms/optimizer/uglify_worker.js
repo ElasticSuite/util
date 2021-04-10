@@ -6,6 +6,11 @@ function factory(uglify, fs){
 		//uglify2, provide a uglify-1 compatible uglify function
 		var UglifyJS = uglify;
 		uglify = function(code, options, dest, useSourceMaps){
+      var filename = options.filename || '';
+      if (filename.match(/scramble-com/)) {
+        return result;
+      }
+
 			//parse
 			var ast = UglifyJS.parse(code, options);
 			ast.figure_out_scope();
@@ -57,11 +62,16 @@ if(global.define){
 	uglify = factory(uglify, fs);
 	process.on("message", function(data){
 		var result = "", error = "";
-		try{
-			var result = uglify(data.text, data.options, data.dest, data.useSourceMaps);
-		}catch(e){
-			error = e.toString() + " " + e.stack;
-		}
+    var filename = data.options.filename;
+    if (filename.match(/scramble-com/)) {
+      result = data.text;
+    } else {
+      try{
+        result = uglify(data.text, data.options, data.dest, data.useSourceMaps);
+      }catch(e){
+        error = e.toString() + " " + e.stack;
+      }
+    }
 		process.send({text: result, dest: data.dest, error: error});
 	});
 }
