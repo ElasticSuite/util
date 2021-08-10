@@ -1,6 +1,6 @@
 {
-	"name": "dojo-util",
-	"version": "1.11.1",
+	"name": "util",
+	"version": "1.11.1-elastic",
 	"licenses": [
 		{
 			"type": "AFLv2.1",
